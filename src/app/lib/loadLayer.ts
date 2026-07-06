@@ -1,5 +1,5 @@
 import { Assets, Container, Rectangle, Sprite, Texture } from "pixi.js";
-import { TILE_SIZE } from "@app/config";
+import { TILE_SIZE } from "@app";
 
 export async function loadLayer(options: { csvPath: string, tilesetPath: string }) {
     const [csvText, baseTexture] = await Promise.all([

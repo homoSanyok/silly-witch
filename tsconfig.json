@@ -24,17 +24,17 @@
     "noUncheckedSideEffectImports": true,
     "baseUrl": ".",
     "paths": {
-      "@app/*": [
-        "src/app/*"
+      "@app": [
+        "src/app/index"
       ],
-      "@lib/*": [
-        "src/lib/*"
+      "@lib": [
+        "src/lib/index"
       ],
-      "@shared/*": [
-        "src/shared/*"
+      "@shared": [
+        "src/shared/index"
       ],
-      "@entities/*": [
-        "src/entities/*"
+      "@entities": [
+        "src/entities/index"
       ]
     }
   },

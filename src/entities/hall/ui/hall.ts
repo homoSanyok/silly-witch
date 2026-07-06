@@ -1,8 +1,8 @@
 import { Container } from "pixi.js";
-import { fitToScreen } from "@shared/lib";
+import { fitToScreen } from "@shared";
 import { yennefer as loadYennefer } from "./yennefer";
-import { loadLayer } from "@app/lib";
-import { KeysT } from "@app/model";
+import { loadLayer } from "@app";
+import { KeysT } from "@app";
 import { carpet as loadCarpet } from "./carpet";
 
 const HALL_PATH_PREFIX = "assets/hall";

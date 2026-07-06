@@ -1,1 +1,0 @@
-export { TILE_SIZE } from "./size";

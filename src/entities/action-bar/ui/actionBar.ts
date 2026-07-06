@@ -1,10 +1,11 @@
-import { KeysT } from "@app/model";
-import { emitEvent } from "@shared/lib";
+import { KeysT } from "@app";
+import { emitEvent } from "@shared";
 import { Container, Graphics, Ticker } from "pixi.js";
 
 const PADDING = 4;
 const HEIGHT = 96 - PADDING * 2;
 const WIDTH = 352 - PADDING * 2;
+const DISABLING_BAR_AFTER_FINISH_TIMEOUT = 600;
 
 const ticker = new Ticker();
 
@@ -58,6 +59,8 @@ export function actionBar(keys: KeysT): Promise<Container> {
         });
 
         window.addEventListener("action-bar:start", () => {
+            if (bar.visible) return;
+
             bar.visible = true;
             ticker.start();
 
@@ -65,7 +68,6 @@ export function actionBar(keys: KeysT): Promise<Container> {
         });
 
         window.addEventListener("action-bar:space-pressed", () => {
-            ticker.stop();
             bar.visible = false;
         });
     });
@@ -93,7 +95,11 @@ function simpleCenterLine(keys: KeysT, container: Container, selector: Graphics)
 
     const handler = () => {
         if (keys.space?.pushed) {
-            emitEvent("action-bar:space-pressed", { success: rectsIntersect(line, selector) });
+            ticker.stop();
+            setTimeout(
+                () => emitEvent("action-bar:space-pressed", { success: rectsIntersect(line, selector) }),
+                DISABLING_BAR_AFTER_FINISH_TIMEOUT
+            );
             ticker.remove(handler);
         }
     };

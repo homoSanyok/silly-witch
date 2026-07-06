@@ -1,5 +1,5 @@
-import { loadCharacter } from "@app/lib";
-import { KeyName, KeysT } from "@app/model";
+import { loadCharacter } from "@app";
+import { KeyName, KeysT } from "@app";
 import { AnimatedSprite, Polygon, Ticker } from "pixi.js";
 
 const FRAME_DURATION = 10;

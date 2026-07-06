@@ -1,6 +1,5 @@
-import { loadLayer } from "@app/lib";
-import { KeysT } from "@app/model";
-import { emitEvent } from "@shared/lib";
+import { KeysT, loadLayer } from "@app";
+import { emitEvent } from "@shared";
 import { AnimatedSprite, Container, ContainerChild, Ticker } from "pixi.js";
 
 const ticker = new Ticker();

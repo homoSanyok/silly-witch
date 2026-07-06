@@ -1,8 +1,11 @@
 import { Application, extensions, ExtensionType } from "pixi.js";
-import { keysListener, loadBackground } from "@app/lib";
-import { KeysT } from "@app/model";
-import { hall as loadHall } from "@entities/hall/ui";
-import { actionBar as actionBarLoad } from "@entities/action-bar/ui";
+import { keysListener, loadBackground } from "@app";
+import { KeysT } from "@app";
+import {
+  hall as loadHall,
+  actionBar as actionBarLoad,
+  foolishnessBar as foolishnessBarLoad
+} from "@entities";
 
 extensions.add({
   extension: {
@@ -36,9 +39,11 @@ extensions.add({
 
   const background = await loadBackground({ width: window.innerWidth, height: window.innerHeight, file: "assets/hall/hall.background.png" });
   const actionBar = await actionBarLoad(keys);
+  const foolishnessBar = await foolishnessBarLoad(keys);
   const hall = await loadHall(keys);
 
   app.stage.addChild(background);
   app.stage.addChild(hall);
   app.stage.addChild(actionBar);
+  app.stage.addChild(foolishnessBar);
 })();
