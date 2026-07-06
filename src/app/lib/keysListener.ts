@@ -13,10 +13,10 @@ const keyCodeMap: Record<string, string> = {
     'ControlRight': 'control',
     'Enter': 'enter',
     'Escape': 'escape',
-    'ArrowUp': 'arrowup',
-    'ArrowDown': 'arrowdown',
-    'ArrowLeft': 'arrowleft',
-    'ArrowRight': 'arrowright',
+    'ArrowUp': 'w',
+    'ArrowDown': 's',
+    'ArrowLeft': 'a',
+    'ArrowRight': 'd',
     'KeyE': 'e',
     'KeyR': 'r',
     'KeyF': 'f',
@@ -42,7 +42,7 @@ const keyCodeMap: Record<string, string> = {
 
 export function keysListener(keys: KeysT): () => void {
     const onKeyDown = (e: KeyboardEvent) => {
-        const keyName = keyCodeMap[e.code];
+        let keyName = keyCodeMap[e.code];
         if (!keyName) {
             console.warn(`Неизвестный код клавиши: ${e.code}`);
             return;

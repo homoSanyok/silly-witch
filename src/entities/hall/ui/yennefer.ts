@@ -201,7 +201,7 @@ function gotoUp(yennefer: AnimatedSprite) {
 }
 
 function gotoStop(yennefer: AnimatedSprite) {
-    if (frameTimer > FRAME_DURATION) {
+    if (frameTimer > FRAME_DURATION * 7) {
         frameTimer = 0;
 
         if (RIGHT_FRAMES.includes(yennefer.currentFrame)) yennefer.gotoAndStop(RIGHT_FRAMES[0]);
