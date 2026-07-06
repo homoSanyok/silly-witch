@@ -1,6 +1,30 @@
-import { KeysT, loadLayer } from "@app";
+import { getFoolishness, KeysT, loadLayer, setFoolishness } from "@app";
 import { emitEvent } from "@shared";
 import { AnimatedSprite, Container, ContainerChild, Ticker } from "pixi.js";
+import { FailedKeysT, InteractionResultMapT, SuccessedKeysT, ActionT } from "../model/InteractionResultMapT";
+
+const INTERACTION_RESULT_MAP: InteractionResultMapT = {
+    "success": {
+        "to-smell": {
+            foolishness: -10,
+            description: "Вы решили понюхать ковёр. Он пахнет... грязью."
+        }
+    },
+    "failed": {
+        "to-lie": {
+            foolishness: 10,
+            description: "Вы решили полежать на грязном ковре."
+        },
+        "to-lie:washed": {
+            foolishness: 10,
+            description: "Вы решили полежать на грязном ковре. Тот факт, что шерсть ещё не до конца высохла, не смущает вас."
+        },
+        "gnaw": {
+            foolishness: 10,
+            description: "Вы решили погрызть ковёр. На удивдение крайне интересное занятие."
+        }
+    }
+}
 
 const ticker = new Ticker();
 
@@ -9,6 +33,10 @@ export async function carpet(yennefer: AnimatedSprite, keys: KeysT): Promise<Con
         const carpet = await loadLayer({ csvPath: "assets/hall/hall_коврик.csv", tilesetPath: "assets/hall/hall.tileset.png" });
         resolve(carpet);
 
+        /** 
+         * Is user in interactive game mode.
+         * If true the mini game launched.
+         */
         let isInteraction = false;
         ticker.add(() => {
             if (keys.e?.pushed && rectsIntersectOrContain(yennefer, carpet) && !isInteraction) {
@@ -21,7 +49,27 @@ export async function carpet(yennefer: AnimatedSprite, keys: KeysT): Promise<Con
 
         window.addEventListener("action-bar:space-pressed", event => {
             isInteraction = false;
-            console.log(event.detail.success);
+
+            let action: ActionT = {
+                foolishness: .1,
+                description: ""
+            };
+
+            const result = event.detail.success ? INTERACTION_RESULT_MAP.success : INTERACTION_RESULT_MAP.failed;
+            const actionKeys = Object.keys(result);
+
+            // Правильный расчёт: от 0 до actionKeys.length - 1
+            const resActionKeyIndex = Math.floor(Math.random() * actionKeys.length);
+            const resActionKey = actionKeys[resActionKeyIndex] as SuccessedKeysT | FailedKeysT;
+
+            // Проверяем и получаем результат
+            if (event.detail.success && resActionKey in INTERACTION_RESULT_MAP.success) {
+                action = INTERACTION_RESULT_MAP.success[resActionKey as SuccessedKeysT];
+            } else if (!event.detail.success && resActionKey in INTERACTION_RESULT_MAP.failed) {
+                action = INTERACTION_RESULT_MAP.failed[resActionKey as FailedKeysT];
+            }
+
+            setFoolishness(getFoolishness() + action.foolishness, { emitEvent: true });
         });
     });
 }

@@ -1,9 +1,10 @@
-import { getFoolishness, KeysT, setFoolishness } from "@app";
+import { getFoolishness, getFoolishnessSpeed, KeysT, setFoolishness } from "@app";
 import { Container, Graphics, Ticker } from "pixi.js";
 
 const PADDING = 4;
 const WIDTH = 48 - PADDING * 2;
 const HEIGHT = 176 - PADDING * 2;
+const FRAME_TIMER_TIMEOUT = 1000;
 
 const ticker = new Ticker();
 
@@ -42,14 +43,14 @@ export function foolishnessBar(keys: KeysT): Promise<Container> {
         ticker.add(ticker => {
             frameTimer += ticker.deltaMS;
 
-            const currentFoolishness = getFoolishness();
-
-            if (frameTimer > 1000) {
+            if (frameTimer > FRAME_TIMER_TIMEOUT) {
                 frameTimer = 0;
-                setLevel(currentFoolishness + 1);
+                setLevel(getFoolishness() + 1 * getFoolishnessSpeed());
             }
         });
         ticker.start();
+
+        window.addEventListener("foolishness-bar:changed", () => setLevel(getFoolishness()));
     });
 }
 
@@ -62,9 +63,6 @@ function setLevel(level: number) {
     const height = HEIGHT * (fixedLevel / 100);
     FILL_RECT.rect(0, 0, WIDTH, HEIGHT - height)
         .fill("#A59805");
-
-    // FILL_RECT.x = PADDING;
-    // FILL_RECT.y = PADDING;
 
     setFoolishness(level);
 }
