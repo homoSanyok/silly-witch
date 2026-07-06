@@ -4,7 +4,7 @@ import path from "node:path"; // Импортируем модуль 'path' дл
 // https://vite.dev/config/
 export default defineConfig({
   publicDir: "public",
-  base: "/dura-at-home/",
+  base: "/silly-witch/",
   build: {
     assetsDir: "assets",
     outDir: "dist"
