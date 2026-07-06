@@ -39,7 +39,7 @@ extensions.add({
 
   const background = await loadBackground({ width: window.innerWidth, height: window.innerHeight, file: "assets/hall/hall.background.png" });
   const actionBar = await actionBarLoad(keys);
-  const foolishnessBar = await foolishnessBarLoad(keys);
+  const foolishnessBar = await foolishnessBarLoad();
   const hall = await loadHall(keys);
 
   app.stage.addChild(background);

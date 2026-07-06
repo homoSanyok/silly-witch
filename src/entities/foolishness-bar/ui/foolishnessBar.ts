@@ -1,4 +1,4 @@
-import { getFoolishness, getFoolishnessSpeed, KeysT, setFoolishness } from "@app";
+import { getFoolishness, getFoolishnessSpeed, setFoolishness } from "@app";
 import { Container, Graphics, Ticker } from "pixi.js";
 
 const PADDING = 4;
@@ -10,7 +10,7 @@ const ticker = new Ticker();
 
 const FILL_RECT = new Graphics();
 
-export function foolishnessBar(keys: KeysT): Promise<Container> {
+export function foolishnessBar(): Promise<Container> {
     return new Promise(resolve => {
         const bar = new Container();
         resolve(bar);

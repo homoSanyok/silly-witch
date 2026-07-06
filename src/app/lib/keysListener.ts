@@ -1,4 +1,4 @@
-import { KeysT } from "@app/model";
+import { KeysT } from "@app";
 
 // Маппинг кодов клавиш на английские названия
 const keyCodeMap: Record<string, string> = {
