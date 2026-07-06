@@ -21,7 +21,7 @@ const INTERACTION_RESULT_MAP: InteractionResultMapT = {
         },
         "gnaw": {
             foolishness: 10,
-            description: "Вы решили погрызть ковёр. На удивдение крайне интересное занятие."
+            description: "Вы решили погрызть ковёр. На удивление крайне интересное занятие."
         }
     }
 }
