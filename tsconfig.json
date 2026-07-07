@@ -35,6 +35,9 @@
       ],
       "@entities": [
         "src/entities/index"
+      ],
+      "@widgets": [
+        "src/widgets/index"
       ]
     }
   },

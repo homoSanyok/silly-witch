@@ -3,7 +3,7 @@ import { ActionResultsMapT } from "../model/ActionResultsMapT";
 
 type pathKeyT = "hall/carpet";
 const PATH_MAP: Record<pathKeyT, string> = {
-    "hall/carpet": "actions-results/$lang/hall/carpet.json"
+    "hall/carpet": "actions-results/$lang/hall-carpet.json"
 }
 
 /**
@@ -21,7 +21,7 @@ export class ActionResults {
         return { result: results[key], key: key };
     }
 
-    async load(path: pathKeyT, lang: "en" | "ru" = "ru") {
+    async load(path: pathKeyT, lang: "en" | "ru") {
         const fullPath = PATH_MAP[path].replace("$lang", lang);
         this.actionReults = await Assets.load(fullPath);
     }

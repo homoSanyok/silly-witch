@@ -1,5 +1,3 @@
-import { emitEvent } from "@shared";
-
 const FOOLISHNESS_PATH = "foolishness";
 const FOOLISHNESS_MIN = 0;
 const FOOLISHNESS_MAX = 100;

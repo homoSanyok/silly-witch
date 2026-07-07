@@ -1,0 +1,23 @@
+{
+    "$schema": "../actions-results.schema.json",
+    "success": {
+        "to-smell": {
+            "foolishness": -10,
+            "description": "Вы решили понюхать ковёр. Он пахнет... грязью."
+        }
+    },
+    "failed": {
+        "to-lie": {
+            "foolishness": 10,
+            "description": "Вы решили полежать на грязном ковре."
+        },
+        "to-lie:washed": {
+            "foolishness": 10,
+            "description": "Вы решили полежать на грязном ковре. Тот факт, что шерсть ещё не до конца высохла, не смущает вас."
+        },
+        "gnaw": {
+            "foolishness": 10,
+            "description": "Вы решили погрызть ковёр. На удивление крайне интересное занятие."
+        }
+    }
+}

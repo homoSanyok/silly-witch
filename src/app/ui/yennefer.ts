@@ -1,25 +1,9 @@
-import { loadTileMap } from "@app";
+import { loadTileset } from "@app";
 import { KeyName } from "@app";
-import { AnimatedSprite, Polygon, Ticker } from "pixi.js";
+import { AnimatedSprite, Polygon, Texture, Ticker } from "pixi.js";
 
 const FRAME_DURATION = 10;
 const MOVE_ALPHA = 2.2;
-// const POLYGON_MAP = new Polygon([
-//     2 * 32, 5 * 32,   // 64, 160
-//     2 * 32, 8 * 32,   // 64, 256
-//     0, 8 * 32,        // 0, 256
-//     0, 14 * 32,       // 0, 448
-//     3 * 32, 14 * 32,  // 96, 448
-//     3 * 32, 13 * 32,  // 96, 416
-//     7 * 32, 13 * 32,  // 224, 416
-//     7 * 32, 15 * 32,  // 224, 480
-//     12 * 32, 15 * 32, // 384, 480
-//     13 * 32, 15 * 32, // 384, 448
-//     13 * 32, 14 * 32, // 416, 448
-//     13 * 32, 9 * 32,  // 416, 288
-//     8 * 32, 9 * 32,   // 256, 288
-//     8 * 32, 5 * 32    // 256, 160
-// ]);
 
 const RIGHT_FRAMES = [0, 1, 2, 3];
 const LEFT_FRAMES = [4, 5, 6, 7];
@@ -31,22 +15,29 @@ const UP_FRAMES = [12, 13, 14, 15];
  */
 export class Yennefer {
     private readonly moveTicker = new Ticker();
+    private frameTimer = 0;
 
-    private _character = new AnimatedSprite([]);
-    private _polygon = new Polygon([]);
+    private _character = new AnimatedSprite([new Texture()]);
+    private readonly _polygon = new Polygon([]);
 
     get character() { return this._character; }
 
     get polygon() { return this._polygon; }
-    set polygon(value: Polygon) { this._polygon = value; }
+    set polygon(value: Polygon) { this._polygon.points = value.points; }
+
 
     async load() {
-        const textures = await loadTileMap([
+        const textures = await loadTileset([
             { frameWidth: 80, frameHeight: 64, cols: 4, rows: 2, file: "assets/yennefer/walk-horizontal.png" },
             { frameWidth: 40, frameHeight: 64, cols: 4, rows: 2, file: "assets/yennefer/walk-vertical.png" },
         ]);
 
-        this._character.textures = textures;
+        this._character = new AnimatedSprite(textures);
+        this._character.gotoAndStop(LEFT_FRAMES[1]);
+        this._character.x = 9 * 32;
+        this._character.y = 12 * 32;
+
+        this.moveTicker.start();
         return this._character;
     }
 
@@ -56,45 +47,58 @@ export class Yennefer {
         width: number,
         height: number
     }) {
+        if (this._polygon.points.length === 0) return true;
+
         return this._polygon.contains(options.x, options.y) &&
             this._polygon.contains(options.x + options.width, options.y) &&
             this._polygon.contains(options.x + options.width, options.y + options.height) &&
             this._polygon.contains(options.x, options.y + options.height)
     }
 
-    private gotoRight() {
-        this._character.gotoAndStop((this._character.currentFrame + 1) % 4);
+    gotoRight() {
+        if (this.frameTimer > FRAME_DURATION || this._character.currentFrame > 3) {
+            this._character.gotoAndStop((this._character.currentFrame + 1) % 4);
+            this.frameTimer = 0;
+        }
     }
 
-    private gotoLeft() {
-        this._character.gotoAndStop(4 + (this._character.currentFrame + 1) % 4);
+    gotoLeft() {
+        if (this.frameTimer > FRAME_DURATION || (this._character.currentFrame < 4 || this._character.currentFrame > 7)) {
+            this._character.gotoAndStop(4 + (this._character.currentFrame + 1) % 4);
+            this.frameTimer = 0;
+        }
     }
 
-    private gotoDown() {
-        this._character.gotoAndStop(8 + (this._character.currentFrame + 1) % 4);
+    gotoDown() {
+        if (this.frameTimer > FRAME_DURATION || (this._character.currentFrame < 8 || this._character.currentFrame > 11)) {
+            this._character.gotoAndStop(8 + (this._character.currentFrame + 1) % 4);
+            this.frameTimer = 0;
+        }
     }
 
-    private gotoUp() {
-        this._character.gotoAndStop(12 + (this._character.currentFrame + 1) % 4);
+    gotoUp() {
+        if (this.frameTimer > FRAME_DURATION || this._character.currentFrame < 12) {
+            this._character.gotoAndStop(12 + (this._character.currentFrame + 1) % 4);
+            this.frameTimer = 0;
+        }
     }
 
-    private gotoStop() {
-        if (RIGHT_FRAMES.includes(this._character.currentFrame)) this._character.gotoAndStop(RIGHT_FRAMES[0]);
-        else if (LEFT_FRAMES.includes(this._character.currentFrame)) this._character.gotoAndStop(LEFT_FRAMES[3]);
-        else if (DOWN_FRAMES.includes(this._character.currentFrame)) this._character.gotoAndStop(DOWN_FRAMES[0]);
-        else if (UP_FRAMES.includes(this._character.currentFrame)) this._character.gotoAndStop(UP_FRAMES[0]);
+    gotoStop() {
+        if (this.frameTimer > FRAME_DURATION * 7) {
+            this.frameTimer = 0;
+
+            if (RIGHT_FRAMES.includes(this._character.currentFrame)) this._character.gotoAndStop(RIGHT_FRAMES[0]);
+            else if (LEFT_FRAMES.includes(this._character.currentFrame)) this._character.gotoAndStop(LEFT_FRAMES[3]);
+            else if (DOWN_FRAMES.includes(this._character.currentFrame)) this._character.gotoAndStop(DOWN_FRAMES[0]);
+            else if (UP_FRAMES.includes(this._character.currentFrame)) this._character.gotoAndStop(UP_FRAMES[0]);
+        }
     }
 
     constructor() {
-        let frameTimer = 0;
-
         this.moveTicker.add(ticker => {
-            frameTimer += ticker.deltaTime;
+            this.frameTimer += ticker.deltaTime;
             const keys = window.KeysListener.keys;
             const yennefer = this._character;
-
-            if (frameTimer < FRAME_DURATION) return;
-            frameTimer = 0;
 
             let lastPushedKey: KeyName | undefined = "w";
             for (const key of (["w", "a", "s", "d"] as KeyName[])) {
@@ -193,7 +197,6 @@ export class Yennefer {
 
             this.gotoStop();
         });
-        this.moveTicker.start();
 
         window.addEventListener("action-bar:start", () => this.moveTicker.stop());
         window.addEventListener("action-bar:space-pressed", () => this.moveTicker.start());

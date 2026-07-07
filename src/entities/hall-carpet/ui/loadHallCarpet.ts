@@ -4,11 +4,7 @@ import { Container, ContainerChild, Ticker } from "pixi.js";
 
 const ticker = new Ticker();
 
-export class HallCarpet {
-
-}
-
-export async function loadCarpet(): Promise<Container<ContainerChild>> {
+export function loadHallCarpet(): Promise<Container<ContainerChild>> {
     return new Promise(async (resolve) => {
         const carpet = await loadLayer({ csvPath: "assets/hall/hall_коврик.csv", tilesetPath: "assets/hall/hall.tileset.png" });
         resolve(carpet);
