@@ -1,4 +1,3 @@
-import { KeysT } from "@app";
 import { emitEvent } from "@shared";
 import { Container, Graphics, Ticker } from "pixi.js";
 
@@ -9,7 +8,7 @@ const DISABLING_BAR_AFTER_FINISH_TIMEOUT = 600;
 
 const ticker = new Ticker();
 
-export function actionBar(keys: KeysT): Promise<Container> {
+export function loadActionBar(): Promise<Container> {
     return new Promise(async (resolve) => {
         const bar = new Container();
         resolve(bar);
@@ -64,7 +63,7 @@ export function actionBar(keys: KeysT): Promise<Container> {
             bar.visible = true;
             ticker.start();
 
-            simpleCenterLine(keys, bar, selector);
+            simpleCenterLine(bar, selector);
         });
 
         window.addEventListener("action-bar:space-pressed", () => {
@@ -83,18 +82,19 @@ function rectsIntersect(
         rect2.y + rect2.height < rect1.y);
 }
 
-function simpleCenterLine(keys: KeysT, container: Container, selector: Graphics) {
+function simpleCenterLine(container: Container, selector: Graphics) {
     const line = new Graphics()
         .rect(0, 0, 24, HEIGHT)
         .fill("#63B208");
 
     container.addChild(line);
+    container.setChildIndex(line, 3);
 
     line.x = WIDTH / 2 - line.width / 2;
     line.y = PADDING;
 
     const handler = () => {
-        if (keys.space?.pushed) {
+        if (window.KeysListener.keys.space?.pushed) {
             ticker.stop();
             setTimeout(
                 () => emitEvent("action-bar:space-pressed", { success: rectsIntersect(line, selector) }),

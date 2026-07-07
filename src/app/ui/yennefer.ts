@@ -1,53 +1,100 @@
-import { loadCharacter } from "@app";
-import { KeyName, KeysT } from "@app";
+import { loadTileMap } from "@app";
+import { KeyName } from "@app";
 import { AnimatedSprite, Polygon, Ticker } from "pixi.js";
 
 const FRAME_DURATION = 10;
 const MOVE_ALPHA = 2.2;
-const POLYGON_MAP = new Polygon([
-    2 * 32, 5 * 32,   // 64, 160
-    2 * 32, 8 * 32,   // 64, 256
-    0, 8 * 32,   // 0, 256
-    0, 14 * 32,  // 0, 448
-    3 * 32, 14 * 32,  // 96, 448
-    3 * 32, 13 * 32,  // 96, 416
-    7 * 32, 13 * 32,  // 224, 416
-    7 * 32, 15 * 32,  // 224, 480
-    12 * 32, 15 * 32, // 384, 480
-    13 * 32, 15 * 32, // 384, 448
-    13 * 32, 14 * 32, // 416, 448
-    13 * 32, 9 * 32,  // 416, 288
-    8 * 32, 9 * 32,   // 256, 288
-    8 * 32, 5 * 32    // 256, 160
-]);
+// const POLYGON_MAP = new Polygon([
+//     2 * 32, 5 * 32,   // 64, 160
+//     2 * 32, 8 * 32,   // 64, 256
+//     0, 8 * 32,        // 0, 256
+//     0, 14 * 32,       // 0, 448
+//     3 * 32, 14 * 32,  // 96, 448
+//     3 * 32, 13 * 32,  // 96, 416
+//     7 * 32, 13 * 32,  // 224, 416
+//     7 * 32, 15 * 32,  // 224, 480
+//     12 * 32, 15 * 32, // 384, 480
+//     13 * 32, 15 * 32, // 384, 448
+//     13 * 32, 14 * 32, // 416, 448
+//     13 * 32, 9 * 32,  // 416, 288
+//     8 * 32, 9 * 32,   // 256, 288
+//     8 * 32, 5 * 32    // 256, 160
+// ]);
 
 const RIGHT_FRAMES = [0, 1, 2, 3];
 const LEFT_FRAMES = [4, 5, 6, 7];
 const DOWN_FRAMES = [8, 9, 10, 11];
 const UP_FRAMES = [12, 13, 14, 15];
 
-const ticker = new Ticker();
+/**
+ * Singleton объект, инициализируемый в `window`.
+ */
+export class Yennefer {
+    private readonly moveTicker = new Ticker();
 
-let frameTimer = 0;
+    private _character = new AnimatedSprite([]);
+    private _polygon = new Polygon([]);
 
-export function yennefer(keys: KeysT): Promise<AnimatedSprite> {
-    return new Promise(async (resolve) => {
-        const yennefer = await loadCharacter([
+    get character() { return this._character; }
+
+    get polygon() { return this._polygon; }
+    set polygon(value: Polygon) { this._polygon = value; }
+
+    async load() {
+        const textures = await loadTileMap([
             { frameWidth: 80, frameHeight: 64, cols: 4, rows: 2, file: "assets/yennefer/walk-horizontal.png" },
             { frameWidth: 40, frameHeight: 64, cols: 4, rows: 2, file: "assets/yennefer/walk-vertical.png" },
         ]);
-        resolve(yennefer);
 
-        yennefer.gotoAndStop(LEFT_FRAMES[1]);
-        yennefer.x = 9 * 32;
-        yennefer.y = 12 * 32;
+        this._character.textures = textures;
+        return this._character;
+    }
 
-        let moveDisabled = false;
+    private isInPolygon(options: {
+        x: number,
+        y: number,
+        width: number,
+        height: number
+    }) {
+        return this._polygon.contains(options.x, options.y) &&
+            this._polygon.contains(options.x + options.width, options.y) &&
+            this._polygon.contains(options.x + options.width, options.y + options.height) &&
+            this._polygon.contains(options.x, options.y + options.height)
+    }
 
-        ticker.add(ticker => {
+    private gotoRight() {
+        this._character.gotoAndStop((this._character.currentFrame + 1) % 4);
+    }
+
+    private gotoLeft() {
+        this._character.gotoAndStop(4 + (this._character.currentFrame + 1) % 4);
+    }
+
+    private gotoDown() {
+        this._character.gotoAndStop(8 + (this._character.currentFrame + 1) % 4);
+    }
+
+    private gotoUp() {
+        this._character.gotoAndStop(12 + (this._character.currentFrame + 1) % 4);
+    }
+
+    private gotoStop() {
+        if (RIGHT_FRAMES.includes(this._character.currentFrame)) this._character.gotoAndStop(RIGHT_FRAMES[0]);
+        else if (LEFT_FRAMES.includes(this._character.currentFrame)) this._character.gotoAndStop(LEFT_FRAMES[3]);
+        else if (DOWN_FRAMES.includes(this._character.currentFrame)) this._character.gotoAndStop(DOWN_FRAMES[0]);
+        else if (UP_FRAMES.includes(this._character.currentFrame)) this._character.gotoAndStop(UP_FRAMES[0]);
+    }
+
+    constructor() {
+        let frameTimer = 0;
+
+        this.moveTicker.add(ticker => {
             frameTimer += ticker.deltaTime;
+            const keys = window.KeysListener.keys;
+            const yennefer = this._character;
 
-            if (moveDisabled) return;
+            if (frameTimer < FRAME_DURATION) return;
+            frameTimer = 0;
 
             let lastPushedKey: KeyName | undefined = "w";
             for (const key of (["w", "a", "s", "d"] as KeyName[])) {
@@ -60,59 +107,55 @@ export function yennefer(keys: KeysT): Promise<AnimatedSprite> {
             switch (lastPushedKey) {
                 case "w": {
                     const xCompensation = RIGHT_FRAMES.includes(yennefer.currentFrame) ? 40 : 0;
-                    if (!isInPoligin({
-                        yennefer: yennefer,
+                    if (!this.isInPolygon({
                         x: yennefer.x + xCompensation,
                         y: yennefer.y - ticker.deltaTime * MOVE_ALPHA,
                         width: 40,
                         height: 64
                     })) {
                         if (UP_FRAMES.includes(yennefer.currentFrame)) break;
-                        gotoUp(yennefer);
+                        this.gotoUp();
                         break;
                     }
 
                     yennefer.x += xCompensation;
                     yennefer.y -= ticker.deltaTime * MOVE_ALPHA;
-                    gotoUp(yennefer);
+                    this.gotoUp();
                     break;
                 }
                 case "s": {
                     const xCompensation = RIGHT_FRAMES.includes(yennefer.currentFrame) ? 40 : 0;
-                    if (!isInPoligin({
-                        yennefer: yennefer,
+                    if (!this.isInPolygon({
                         x: yennefer.x + xCompensation,
                         y: yennefer.y + ticker.deltaTime * MOVE_ALPHA,
                         width: 40,
                         height: 64
                     })) {
                         if (DOWN_FRAMES.includes(yennefer.currentFrame)) break;
-                        gotoDown(yennefer)
+                        this.gotoDown()
                         break;
                     }
 
                     yennefer.x += xCompensation;
                     yennefer.y += ticker.deltaTime * MOVE_ALPHA;
-                    gotoDown(yennefer);
+                    this.gotoDown();
                     break;
                 }
                 case "a": {
-                    if (!isInPoligin({
-                        yennefer: yennefer,
+                    if (!this.isInPolygon({
                         x: yennefer.x - ticker.deltaTime * MOVE_ALPHA,
                         y: yennefer.y,
                         width: 80,
                         height: 64
                     })) {
                         if (LEFT_FRAMES.includes(yennefer.currentFrame) || RIGHT_FRAMES.includes(yennefer.currentFrame)) break;
-                        if (!isInPoligin({
-                            yennefer: yennefer,
+                        if (!this.isInPolygon({
                             x: yennefer.x - ticker.deltaTime * MOVE_ALPHA - 40,
                             y: yennefer.y,
                             width: 80,
                             height: 64
                         })) {
-                            gotoLeft(yennefer);
+                            this.gotoLeft();
                             break;
                         }
 
@@ -120,12 +163,11 @@ export function yennefer(keys: KeysT): Promise<AnimatedSprite> {
                     }
 
                     yennefer.x -= ticker.deltaTime * MOVE_ALPHA;
-                    gotoLeft(yennefer);
+                    this.gotoLeft();
                     break;
                 }
                 case "d": {
-                    if (!isInPoligin({
-                        yennefer: yennefer,
+                    if (!this.isInPolygon({
                         x: yennefer.x + ticker.deltaTime * MOVE_ALPHA,
                         y: yennefer.y,
                         width: 80,
@@ -133,8 +175,7 @@ export function yennefer(keys: KeysT): Promise<AnimatedSprite> {
                     })) {
                         if (LEFT_FRAMES.includes(yennefer.currentFrame) || RIGHT_FRAMES.includes(yennefer.currentFrame)) break;
                         let xOffset = 0;
-                        while (!isInPoligin({
-                            yennefer: yennefer,
+                        while (!this.isInPolygon({
                             x: yennefer.x + ticker.deltaTime * MOVE_ALPHA - xOffset,
                             y: yennefer.y,
                             width: 80,
@@ -145,68 +186,16 @@ export function yennefer(keys: KeysT): Promise<AnimatedSprite> {
                     }
 
                     yennefer.x += ticker.deltaTime * MOVE_ALPHA;
-                    gotoRight(yennefer);
+                    this.gotoRight();
                     break;
                 }
             }
 
-            gotoStop(yennefer);
+            this.gotoStop();
         });
-        ticker.start();
+        this.moveTicker.start();
 
-        window.addEventListener("action-bar:start", () => moveDisabled = true);
-        window.addEventListener("action-bar:space-pressed", () => moveDisabled = false);
-    });
-}
-
-function isInPoligin(options: {
-    yennefer: AnimatedSprite,
-    x: number,
-    y: number,
-    width: number,
-    height: number
-}) {
-    return POLYGON_MAP.contains(options.x, options.y) &&
-        POLYGON_MAP.contains(options.x + options.width, options.y) &&
-        POLYGON_MAP.contains(options.x + options.width, options.y + options.height) &&
-        POLYGON_MAP.contains(options.x, options.y + options.height)
-}
-
-function gotoRight(yennefer: AnimatedSprite) {
-    if (frameTimer > FRAME_DURATION || yennefer.currentFrame > 3) {
-        yennefer.gotoAndStop((yennefer.currentFrame + 1) % 4);
-        frameTimer = 0;
-    }
-}
-
-function gotoLeft(yennefer: AnimatedSprite) {
-    if (frameTimer > FRAME_DURATION || (yennefer.currentFrame < 4 || yennefer.currentFrame > 7)) {
-        yennefer.gotoAndStop(4 + (yennefer.currentFrame + 1) % 4);
-        frameTimer = 0;
-    }
-}
-
-function gotoDown(yennefer: AnimatedSprite) {
-    if (frameTimer > FRAME_DURATION || (yennefer.currentFrame < 8 || yennefer.currentFrame > 11)) {
-        yennefer.gotoAndStop(8 + (yennefer.currentFrame + 1) % 4);
-        frameTimer = 0;
-    }
-}
-
-function gotoUp(yennefer: AnimatedSprite) {
-    if (frameTimer > FRAME_DURATION || yennefer.currentFrame < 12) {
-        yennefer.gotoAndStop(12 + (yennefer.currentFrame + 1) % 4);
-        frameTimer = 0;
-    }
-}
-
-function gotoStop(yennefer: AnimatedSprite) {
-    if (frameTimer > FRAME_DURATION * 7) {
-        frameTimer = 0;
-
-        if (RIGHT_FRAMES.includes(yennefer.currentFrame)) yennefer.gotoAndStop(RIGHT_FRAMES[0]);
-        else if (LEFT_FRAMES.includes(yennefer.currentFrame)) yennefer.gotoAndStop(LEFT_FRAMES[3]);
-        else if (DOWN_FRAMES.includes(yennefer.currentFrame)) yennefer.gotoAndStop(DOWN_FRAMES[0]);
-        else if (UP_FRAMES.includes(yennefer.currentFrame)) yennefer.gotoAndStop(UP_FRAMES[0]);
+        window.addEventListener("action-bar:start", () => this.moveTicker.stop());
+        window.addEventListener("action-bar:space-pressed", () => this.moveTicker.start());
     }
 }

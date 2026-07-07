@@ -1,6 +1,6 @@
-import { AnimatedSprite, Assets, Rectangle, Texture } from "pixi.js";
+import { Assets, Rectangle, Texture } from "pixi.js";
 
-export async function loadCharacter(options: {
+export async function loadTileset(options: {
     frameWidth: number,
     frameHeight: number,
     cols: number,
@@ -37,9 +37,5 @@ export async function loadCharacter(options: {
         }
     }
 
-    // Возвращаем массив готовых фреймов
-    const sprite = new AnimatedSprite(textures);
-    sprite.roundPixels = true;
-
-    return sprite;
+    return textures;
 }

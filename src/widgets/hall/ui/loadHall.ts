@@ -1,17 +1,12 @@
 import { Container } from "pixi.js";
 import { fitToScreen } from "@shared";
-import { yennefer as loadYennefer } from "./yennefer";
 import { loadLayer } from "@app";
-import { KeysT } from "@app";
-import { carpet as loadCarpet } from "./carpet";
 
 const HALL_PATH_PREFIX = "assets/hall";
 const TILESET_PATH = HALL_PATH_PREFIX + "/hall.tileset.png";
 
-export async function hall(keys: KeysT) {
+export async function loadHall() {
     const container = new Container();
-
-    const yennefer = await loadYennefer(keys);
 
     const [
         floor,
@@ -31,7 +26,7 @@ export async function hall(keys: KeysT) {
         bathroomDoorjamb,
     ] = await Promise.all([
         loadLayer({ csvPath: `${HALL_PATH_PREFIX}/hall_пол.csv`, tilesetPath: TILESET_PATH }),
-        loadCarpet(yennefer, keys),
+        loadCarpet(yennefer),
         loadLayer({ csvPath: `${HALL_PATH_PREFIX}/hall_стены.csv`, tilesetPath: TILESET_PATH }),
         loadLayer({ csvPath: `${HALL_PATH_PREFIX}/hall_вход кухня.csv`, tilesetPath: TILESET_PATH }),
         loadLayer({ csvPath: `${HALL_PATH_PREFIX}/hall_входы зал ванна.csv`, tilesetPath: TILESET_PATH }),
@@ -55,7 +50,7 @@ export async function hall(keys: KeysT) {
     container.addChild(bathroomDoorjamb);// косяк у ванной
     container.addChild(bar);             // бар
     container.addChild(lex);             // лекс
-    container.addChild(yennefer);        // собака
+    container.addChild(window.Yennefer.character);        // собака
     container.addChild(cleaningStuff);   // уборочная херь
     container.addChild(compod);          // комрод
     container.addChild(barStuff);        // херь на баре

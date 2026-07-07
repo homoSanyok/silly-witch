@@ -1,0 +1,58 @@
+{
+    "$schema": "https://github.com/homoSanyok/silly-witch/tree/main/public/actions",
+    "title": "Action results map",
+    "type": "object",
+    "properties": {
+        "success": {
+            "type": "object",
+            "description": "Результаты успешных взаимодействий",
+            "additionalProperties": {
+                "$ref": "#/definitions/ActionT"
+            },
+            "minProperties": 1,
+            "errorMessage": {
+                "minProperties": "Секция 'success' должна содержать хотя бы одно действие"
+            }
+        },
+        "failed": {
+            "type": "object",
+            "description": "Результаты проваленных взаимодействий",
+            "additionalProperties": {
+                "$ref": "#/definitions/ActionT"
+            },
+            "minProperties": 1,
+            "errorMessage": {
+                "minProperties": "Секция 'failed' должна содержать хотя бы одно действие"
+            }
+        }
+    },
+    "required": [
+        "success",
+        "failed"
+    ],
+    "additionalProperties": false,
+    "definitions": {
+        "ActionT": {
+            "type": "object",
+            "description": "Результат действия",
+            "properties": {
+                "foolishness": {
+                    "type": "integer",
+                    "description": "Количество глупости",
+                    "minimum": -100,
+                    "maximum": 100
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Описание результата",
+                    "minLength": 1
+                }
+            },
+            "required": [
+                "foolishness",
+                "description"
+            ],
+            "additionalProperties": false
+        }
+    }
+}

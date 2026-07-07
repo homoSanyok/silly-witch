@@ -1,4 +1,3 @@
-import { getFoolishness, getFoolishnessSpeed, setFoolishness } from "@app";
 import { Container, Graphics, Ticker } from "pixi.js";
 
 const PADDING = 4;
@@ -10,7 +9,7 @@ const ticker = new Ticker();
 
 const FILL_RECT = new Graphics();
 
-export function foolishnessBar(): Promise<Container> {
+export function loadFoolishnessBar(): Promise<Container> {
     return new Promise(resolve => {
         const bar = new Container();
         resolve(bar);
@@ -45,12 +44,12 @@ export function foolishnessBar(): Promise<Container> {
 
             if (frameTimer > FRAME_TIMER_TIMEOUT) {
                 frameTimer = 0;
-                setLevel(getFoolishness() + 1 * getFoolishnessSpeed());
+                setLevel(window.Foolishness.level + 1 * window.Foolishness.speed);
             }
         });
         ticker.start();
 
-        window.addEventListener("foolishness-bar:changed", () => setLevel(getFoolishness()));
+        window.addEventListener("foolishness:changed", () => setLevel(window.Foolishness.level));
     });
 }
 
@@ -64,5 +63,5 @@ function setLevel(level: number) {
     FILL_RECT.rect(0, 0, WIDTH, HEIGHT - height)
         .fill("#A59805");
 
-    setFoolishness(level);
+    window.Foolishness.level = level;
 }

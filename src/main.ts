@@ -1,11 +1,11 @@
 import { Application, extensions, ExtensionType } from "pixi.js";
-import { keysListener, loadBackground } from "@app";
-import { KeysT } from "@app";
-import {
-  hall as loadHall,
-  actionBar as actionBarLoad,
-  foolishnessBar as foolishnessBarLoad
-} from "@entities";
+import { CustomEventMap, Foolishness, KeysListener, loadBackground, Singletons, Yennefer } from "@app";
+import { loadActionBar, loadFoolishnessBar } from "@entities";
+
+declare global {
+  interface WindowEventMap extends CustomEventMap { }
+  interface Window extends Singletons { }
+}
 
 extensions.add({
   extension: {
@@ -24,9 +24,6 @@ extensions.add({
 });
 
 (async () => {
-  const keys: KeysT = {};
-  keysListener(keys);
-
   const app = new Application();
   await app.init({
     width: window.innerWidth,
@@ -37,10 +34,16 @@ extensions.add({
   });
   document.body.appendChild(app.canvas);
 
+  window.KeysListener = new KeysListener();
+  window.Foolishness = new Foolishness();
+  window.Yennefer = new Yennefer();
+
+  window.Yennefer.load();
+
   const background = await loadBackground({ width: window.innerWidth, height: window.innerHeight, file: "assets/hall/hall.background.png" });
-  const actionBar = await actionBarLoad(keys);
-  const foolishnessBar = await foolishnessBarLoad();
-  const hall = await loadHall(keys);
+  const actionBar = await loadActionBar();
+  const foolishnessBar = await loadFoolishnessBar();
+  const hall = await loadHall();
 
   app.stage.addChild(background);
   app.stage.addChild(hall);
