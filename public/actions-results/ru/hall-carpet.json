@@ -7,7 +7,7 @@
             "title": "to-smell",
             "minFoolishness": 0,
             "maxFoolishness": 100,
-            "chance": 0.1,
+            "chance": 0.2,
             "stupidity": 0
         },
         "sit": {
