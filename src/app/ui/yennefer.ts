@@ -112,7 +112,7 @@ export class Yennefer {
             const yennefer = this._sprite;
             if (!yennefer) return;
 
-            if (window.Action.visible) {
+            if (window.Action.visible || window.Chat.visible) {
                 this.gotoStop({ now: true });
                 return;
             }

@@ -5,4 +5,6 @@ interface KeyState {
     timestamp?: number;
 }
 
-export type KeysT = Record<KeyName, KeyState>;
+export type KeysT = {
+    [key: KeyName]: KeyState
+};

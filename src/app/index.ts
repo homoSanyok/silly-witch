@@ -16,3 +16,4 @@ export * from "./config/size";
 export * from "./ui/yennefer";
 export * from "./ui/foolishness";
 export * from "./ui/action";
+export * from "./ui/chat";

@@ -12,13 +12,17 @@ export function loadHallCarpet(): Promise<Container<ContainerChild>> {
         await actionResults.load("hall/carpet", "ru");
 
         ticker.add(() => {
-            if (window.KeysListener.keys.e?.pushed && rectsIntersectOrContain(window.Yennefer.sprite, carpet) && !window.Action.visible) {
+            if (window.KeysListener.keys.e?.pushed && rectsIntersectOrContain(window.Yennefer.sprite, carpet) && (
+                !window.Action.visible &&
+                !window.Chat.visible
+            )) {
                 window.Action.start()
                     .then(success => {
                         if (success instanceof Error) return;
 
                         const { result } = actionResults.selectResult(success);
                         window.Foolishness.level = window.Foolishness.level + result.foolishness;
+                        window.Chat.start(result);
                     });
             }
         });
