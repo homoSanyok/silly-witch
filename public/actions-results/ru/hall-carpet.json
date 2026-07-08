@@ -63,7 +63,7 @@
             "title": "gnaw-with-people",
             "minFoolishness": 0,
             "maxFoolishness": 100,
-            "chance": 0.1,
+            "chance": 0.6,
             "stupidity": 0
         }
     }

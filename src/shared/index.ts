@@ -1,2 +1,2 @@
 export * from "./lib/fitToScreen";
-export * from "./lib/emitEvent";
+export * from "./model/InteractiveLayer";

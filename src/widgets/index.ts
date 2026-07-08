@@ -1,1 +1,1 @@
-export * from "./hall/ui/loadHall";
+export * from "./loadHall";

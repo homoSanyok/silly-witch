@@ -1,1 +1,1 @@
-export * from "./hall-carpet/ui/loadHallCarpet";
+export * from "./HallCarpet";
