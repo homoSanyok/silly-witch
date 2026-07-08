@@ -1,5 +1,4 @@
 import { ActionResults, loadLayer } from "@app";
-import { emitEvent } from "@shared";
 import { Container, ContainerChild, Ticker } from "pixi.js";
 
 const ticker = new Ticker();
@@ -12,27 +11,18 @@ export function loadHallCarpet(): Promise<Container<ContainerChild>> {
         const actionResults = new ActionResults();
         await actionResults.load("hall/carpet", "ru");
 
-        /** 
-         * Is user in interactive game mode.
-         * If true the mini game launched.
-         */
-        let isInteraction = false;
         ticker.add(() => {
-            if (window.KeysListener.keys.e?.pushed && rectsIntersectOrContain(window.Yennefer.character, carpet) && !isInteraction) {
-                isInteraction = true;
+            if (window.KeysListener.keys.e?.pushed && rectsIntersectOrContain(window.Yennefer.sprite, carpet) && !window.Action.visible) {
+                window.Action.start()
+                    .then(success => {
+                        if (success instanceof Error) return;
 
-                emitEvent("action-bar:start", { level: 0 });
+                        const { result } = actionResults.selectResult(success);
+                        window.Foolishness.level = window.Foolishness.level + result.foolishness;
+                    });
             }
         });
         ticker.start();
-
-        window.addEventListener("action-bar:space-pressed", event => {
-            isInteraction = false;
-
-            const { result } = actionResults.selectResult(event.detail.success);
-            window.Foolishness.level = (window.Foolishness.level + result.foolishness);
-            emitEvent("foolishness:changed");
-        });
     });
 }
 

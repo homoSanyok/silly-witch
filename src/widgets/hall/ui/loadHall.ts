@@ -69,7 +69,7 @@ export async function loadHall() {
     container.addChild(bathroomDoorjamb);          // косяк у ванной
     container.addChild(bar);                       // бар
     container.addChild(lex);                       // лекс
-    container.addChild(window.Yennefer.character); // собака
+    container.addChild(window.Yennefer.sprite); // собака
     container.addChild(cleaningStuff);             // уборочная херь
     container.addChild(compod);                    // комрод
     container.addChild(barStuff);                  // херь на баре

@@ -17,10 +17,10 @@ export class Yennefer {
     private readonly moveTicker = new Ticker();
     private frameTimer = 0;
 
-    private _character = new AnimatedSprite([new Texture()]);
+    private _sprite?: AnimatedSprite;
     private readonly _polygon = new Polygon([]);
 
-    get character() { return this._character; }
+    get sprite(): AnimatedSprite { return this._sprite ?? new AnimatedSprite([new Texture()]); }
 
     get polygon() { return this._polygon; }
     set polygon(value: Polygon) { this._polygon.points = value.points; }
@@ -32,13 +32,13 @@ export class Yennefer {
             { frameWidth: 40, frameHeight: 64, cols: 4, rows: 2, file: "assets/yennefer/walk-vertical.png" },
         ]);
 
-        this._character = new AnimatedSprite(textures);
-        this._character.gotoAndStop(LEFT_FRAMES[1]);
-        this._character.x = 9 * 32;
-        this._character.y = 12 * 32;
+        this._sprite = new AnimatedSprite(textures);
+        this._sprite.gotoAndStop(LEFT_FRAMES[1]);
+        this._sprite.x = 9 * 32;
+        this._sprite.y = 12 * 32;
 
         this.moveTicker.start();
-        return this._character;
+        return this._sprite;
     }
 
     private isInPolygon(options: {
@@ -56,41 +56,51 @@ export class Yennefer {
     }
 
     gotoRight() {
-        if (this.frameTimer > FRAME_DURATION || this._character.currentFrame > 3) {
-            this._character.gotoAndStop((this._character.currentFrame + 1) % 4);
+        if (!this._sprite) return;
+
+        if (this.frameTimer > FRAME_DURATION || this._sprite.currentFrame > 3) {
+            this._sprite.gotoAndStop((this._sprite.currentFrame + 1) % 4);
             this.frameTimer = 0;
         }
     }
 
     gotoLeft() {
-        if (this.frameTimer > FRAME_DURATION || (this._character.currentFrame < 4 || this._character.currentFrame > 7)) {
-            this._character.gotoAndStop(4 + (this._character.currentFrame + 1) % 4);
+        if (!this._sprite) return;
+
+        if (this.frameTimer > FRAME_DURATION || (this._sprite.currentFrame < 4 || this._sprite.currentFrame > 7)) {
+            this._sprite.gotoAndStop(4 + (this._sprite.currentFrame + 1) % 4);
             this.frameTimer = 0;
         }
     }
 
     gotoDown() {
-        if (this.frameTimer > FRAME_DURATION || (this._character.currentFrame < 8 || this._character.currentFrame > 11)) {
-            this._character.gotoAndStop(8 + (this._character.currentFrame + 1) % 4);
+        if (!this._sprite) return;
+
+        if (this.frameTimer > FRAME_DURATION || (this._sprite.currentFrame < 8 || this._sprite.currentFrame > 11)) {
+            this._sprite.gotoAndStop(8 + (this._sprite.currentFrame + 1) % 4);
             this.frameTimer = 0;
         }
     }
 
     gotoUp() {
-        if (this.frameTimer > FRAME_DURATION || this._character.currentFrame < 12) {
-            this._character.gotoAndStop(12 + (this._character.currentFrame + 1) % 4);
+        if (!this._sprite) return;
+
+        if (this.frameTimer > FRAME_DURATION || this._sprite.currentFrame < 12) {
+            this._sprite.gotoAndStop(12 + (this._sprite.currentFrame + 1) % 4);
             this.frameTimer = 0;
         }
     }
 
-    gotoStop() {
-        if (this.frameTimer > FRAME_DURATION * 7) {
+    gotoStop(opetions?: { now: boolean }) {
+        if (!this._sprite) return;
+
+        if (this.frameTimer > FRAME_DURATION * 7 || opetions?.now) {
             this.frameTimer = 0;
 
-            if (RIGHT_FRAMES.includes(this._character.currentFrame)) this._character.gotoAndStop(RIGHT_FRAMES[0]);
-            else if (LEFT_FRAMES.includes(this._character.currentFrame)) this._character.gotoAndStop(LEFT_FRAMES[3]);
-            else if (DOWN_FRAMES.includes(this._character.currentFrame)) this._character.gotoAndStop(DOWN_FRAMES[0]);
-            else if (UP_FRAMES.includes(this._character.currentFrame)) this._character.gotoAndStop(UP_FRAMES[0]);
+            if (RIGHT_FRAMES.includes(this._sprite.currentFrame)) this._sprite.gotoAndStop(RIGHT_FRAMES[0]);
+            else if (LEFT_FRAMES.includes(this._sprite.currentFrame)) this._sprite.gotoAndStop(LEFT_FRAMES[3]);
+            else if (DOWN_FRAMES.includes(this._sprite.currentFrame)) this._sprite.gotoAndStop(DOWN_FRAMES[0]);
+            else if (UP_FRAMES.includes(this._sprite.currentFrame)) this._sprite.gotoAndStop(UP_FRAMES[0]);
         }
     }
 
@@ -98,7 +108,14 @@ export class Yennefer {
         this.moveTicker.add(ticker => {
             this.frameTimer += ticker.deltaTime;
             const keys = window.KeysListener.keys;
-            const yennefer = this._character;
+
+            const yennefer = this._sprite;
+            if (!yennefer) return;
+
+            if (window.Action.visible) {
+                this.gotoStop({ now: true });
+                return;
+            }
 
             let lastPushedKey: KeyName | undefined = "w";
             for (const key of (["w", "a", "s", "d"] as KeyName[])) {
@@ -197,8 +214,5 @@ export class Yennefer {
 
             this.gotoStop();
         });
-
-        window.addEventListener("action-bar:start", () => this.moveTicker.stop());
-        window.addEventListener("action-bar:space-pressed", () => this.moveTicker.start());
     }
 }
