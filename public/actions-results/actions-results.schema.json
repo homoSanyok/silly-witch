@@ -49,7 +49,7 @@
                     "maximum": 100
                 },
                 "chance": {
-                    "type": "float",
+                    "type": "number",
                     "description": "Вероятность того, что выпадет именно это действие",
                     "minimum": 0,
                     "maximum": 1

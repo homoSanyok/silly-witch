@@ -1,6 +1,6 @@
 import { Application, extensions, ExtensionType } from "pixi.js";
-import { CustomEventMap, Foolishness, KeysListener, loadBackground, Singletons, Yennefer } from "@app";
-import { loadHall, loadActionBar, loadFoolishnessBar } from "@widgets";
+import { Action, Chat, CustomEventMap, Foolishness, KeysListener, loadBackground, Singletons, Yennefer } from "@app";
+import { loadHall } from "@widgets";
 
 declare global {
   interface WindowEventMap extends CustomEventMap { }
@@ -37,16 +37,20 @@ extensions.add({
   window.KeysListener = new KeysListener();
   window.Foolishness = new Foolishness();
   window.Yennefer = new Yennefer();
+  window.Action = new Action();
+  window.Chat = new Chat();
 
   await window.Yennefer.load();
+  await window.Foolishness.load();
+  await window.Action.load();
+  await window.Chat.load();
 
   const background = await loadBackground({ width: window.innerWidth, height: window.innerHeight, file: "assets/hall/hall.background.png" });
-  const actionBar = await loadActionBar();
-  const foolishnessBar = await loadFoolishnessBar();
   const hall = await loadHall();
 
   app.stage.addChild(background);
   app.stage.addChild(hall);
-  app.stage.addChild(actionBar);
-  app.stage.addChild(foolishnessBar);
+  app.stage.addChild(window.Action.container);
+  app.stage.addChild(window.Foolishness.container);
+  app.stage.addChild(window.Chat.container);
 })();

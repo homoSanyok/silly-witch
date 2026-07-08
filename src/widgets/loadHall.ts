@@ -1,7 +1,7 @@
 import { Container, Polygon } from "pixi.js";
 import { fitToScreen } from "@shared";
 import { loadLayer } from "@app";
-import { loadHallCarpet } from "@entities";
+import { HallCarpet } from "@entities";
 
 const HALL_PATH_PREFIX = "assets/hall";
 const TILESET_PATH = HALL_PATH_PREFIX + "/hall.tileset.png";
@@ -26,10 +26,11 @@ export async function loadHall() {
     const container = new Container();
 
     window.Yennefer.polygon = POLYGON;
+    const carpet = new HallCarpet();
 
     const [
         floor,
-        carpet,
+        ,
         walls,
         entranceKitchen,
         entranceHallBath,
@@ -45,7 +46,7 @@ export async function loadHall() {
         bathroomDoorjamb,
     ] = await Promise.all([
         loadLayer({ csvPath: `${HALL_PATH_PREFIX}/hall_пол.csv`, tilesetPath: TILESET_PATH }),
-        loadHallCarpet(),
+        carpet.load(),
         loadLayer({ csvPath: `${HALL_PATH_PREFIX}/hall_стены.csv`, tilesetPath: TILESET_PATH }),
         loadLayer({ csvPath: `${HALL_PATH_PREFIX}/hall_вход кухня.csv`, tilesetPath: TILESET_PATH }),
         loadLayer({ csvPath: `${HALL_PATH_PREFIX}/hall_входы зал ванна.csv`, tilesetPath: TILESET_PATH }),
@@ -58,25 +59,27 @@ export async function loadHall() {
         loadLayer({ csvPath: `${HALL_PATH_PREFIX}/hall_чорни.csv`, tilesetPath: TILESET_PATH }),
         loadLayer({ csvPath: `${HALL_PATH_PREFIX}/hall_верхушка.csv`, tilesetPath: TILESET_PATH }),
         loadLayer({ csvPath: `${HALL_PATH_PREFIX}/hall_комрод.csv`, tilesetPath: TILESET_PATH }),
-        loadLayer({ csvPath: `${HALL_PATH_PREFIX}/hall_косяк_у_ванной.csv`, tilesetPath: TILESET_PATH }),
+        loadLayer({ csvPath: `${HALL_PATH_PREFIX}/hall_косяк_у_ванной.csv`, tilesetPath: TILESET_PATH })
     ]);
 
-    container.addChild(floor);                     // пол (самый нижний)
-    container.addChild(carpet);                    // коврик
-    container.addChild(walls);                     // стены
-    container.addChild(entranceHallBath);          // входы зал ванна
-    container.addChild(entranceKitchen);           // вход кухня
-    container.addChild(bathroomDoorjamb);          // косяк у ванной
-    container.addChild(bar);                       // бар
-    container.addChild(lex);                       // лекс
-    container.addChild(window.Yennefer.character); // собака
-    container.addChild(cleaningStuff);             // уборочная херь
-    container.addChild(compod);                    // комрод
-    container.addChild(barStuff);                  // херь на баре
-    container.addChild(cabinet);                   // шкаф
-    container.addChild(wallStuff);                 // херь на стену
-    container.addChild(chorni);                    // чорни
-    container.addChild(top);                       // верхушка (самый верхний)
+    carpet.init();
+
+    container.addChild(floor);                                   // пол (самый нижний)
+    if (carpet.container) container.addChild(carpet.container);  // коврик
+    container.addChild(walls);                                   // стены
+    container.addChild(entranceHallBath);                        // входы зал ванна
+    container.addChild(entranceKitchen);                         // вход кухня
+    container.addChild(bathroomDoorjamb);                        // косяк у ванной
+    container.addChild(bar);                                     // бар
+    container.addChild(lex);                                     // лекс
+    container.addChild(window.Yennefer.sprite);                  // собака
+    container.addChild(cleaningStuff);                           // уборочная херь
+    container.addChild(compod);                                  // комрод
+    container.addChild(barStuff);                                // херь на баре
+    container.addChild(cabinet);                                 // шкаф
+    container.addChild(wallStuff);                               // херь на стену
+    container.addChild(chorni);                                  // чорни
+    container.addChild(top);                                     // верхушка (самый верхний)
 
     fitToScreen(container);
 

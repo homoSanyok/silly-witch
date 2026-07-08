@@ -4,16 +4,29 @@
         "to-smell": {
             "foolishness": -5,
             "description": "Вы решили понюхать ковёр. Он пахнет... грязью, и Вам это понравилось.",
-            "title": "Понюхать ковёр",
+            "title": "to-smell",
+            "minFoolishness": 0,
+            "maxFoolishness": 100,
             "chance": 0.1,
+            "stupidity": 0
         },
         "sit": {
             "foolishness": -7,
-            "description": "Рядом никого нет, Вы решили сесть на коврик и задумчиво смотрите в зеркало на шкафу."
+            "description": "Рядом никого нет, Вы решили сесть на коврик и задумчиво смотрите в зеркало на шкафу.",
+            "title": "sit",
+            "minFoolishness": 0,
+            "maxFoolishness": 100,
+            "chance": 0.1,
+            "stupidity": 0
         },
-        "lie": {
+        "to-lie": {
             "foolishness": -10,
-            "description": "Вокруг спокойно. Кажется, самое время прилечь на коврик и подумать о вечном."
+            "description": "Вокруг спокойно. Кажется, самое время прилечь на коврик и подумать о вечном.",
+            "title": "to-lie",
+            "minFoolishness": 0,
+            "maxFoolishness": 100,
+            "chance": 0.1,
+            "stupidity": 0
         }
     },
     "failed": {
