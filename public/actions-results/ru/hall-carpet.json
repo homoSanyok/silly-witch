@@ -3,48 +3,68 @@
     "success": {
         "to-smell": {
             "foolishness": -5,
+            "stupidity": -3,
             "description": "Вы решили понюхать ковёр. Он пахнет... грязью, и Вам это понравилось.",
-            "title": "to-smell",
+            "title": "Понюхать ковёр",
             "minFoolishness": 0,
-            "maxFoolishness": 100,
-            "chance": 0.2,
-            "stupidity": 0
+            "maxFoolishness": 35,
+            "chance": 0.5
         },
         "sit": {
-            "foolishness": -7,
+            "foolishness": -8,
+            "stupidity": -2,
+            "title": "Сесть на ковёр",
+            "minFoolishness":0, 
+            "maxFoolishness":60,
             "description": "Рядом никого нет, Вы решили сесть на коврик и задумчиво смотрите в зеркало на шкафу.",
-            "title": "sit",
-            "minFoolishness": 0,
-            "maxFoolishness": 100,
-            "chance": 0.1,
-            "stupidity": 0
+            "chance": 0.5
         },
-        "to-lie": {
+        "lie": {
             "foolishness": -10,
-            "description": "Вокруг спокойно. Кажется, самое время прилечь на коврик и подумать о вечном.",
-            "title": "to-lie",
+            "stupidity": -1,
+            "title": "Лечь у ковра",
             "minFoolishness": 0,
-            "maxFoolishness": 100,
-            "chance": 0.1,
-            "stupidity": 0
+            "maxFoolishness": 65,
+            "description": "Вокруг спокойно. Кажется, самое время прилечь рядом с ковриком и подумать о вечном.",
+            "chance": 0.5
         }
     },
     "failed": {
         "to-lie": {
-            "foolishness": -4,
-            "description": "Вы решили полежать на грязном ковре."
+            "foolishness": 10,
+            "stupidity": 5,
+            "title": "Поспать на ковре",
+            "minFoolishness": 30,
+            "maxFoolishness": 100,
+            "description": "Вы решили полежать на грязном ковре.",
+            "chance": 0.5
         },
         "to-lie:washed": {
-            "foolishness": -6,
-            "description": "Вы решили полежать на грязном ковре. Тот факт, что шерсть ещё не до конца высохла, не смущает Вас."
+            "foolishness": 12,
+            "stupidity": 7,
+            "title": "Лечь на ковер после мытья",
+            "minFoolishness": 30,
+            "maxFoolishness": 100,
+            "description": "Вы решили полежать на грязном ковре. Тот факт, что шерсть ещё не до конца высохла, не смущает Вас.",
+            "chance": 0.5
         },
         "gnaw-without-people": {
             "foolishness": -15,
-            "description": "Вы решили погрызть ковёр. На удивление, крайне интересное занятие."
+            "stupidity": 12,
+            "title": "Разбавить скуку уничтожением ковра",
+            "minFoolishness": 50,
+            "maxFoolishness": 100,
+            "description": "Вы решили погрызть ковёр. На удивление, крайне интересное занятие.",
+            "chance": 0.5
         },
         "gnaw-with-people": {
             "foolishness": 10,
-            "description": "Хорошая идея попробовать ковёр на вкус. Вы с наслаждением приступаете к важному делу, но Вас замечают. Сейчас Вы встретитесь с тапком..."
+            "stupidity": 20,
+            "title": "Вы совсем обнаглели и погрызли ковёр в присутствии людей",
+            "minFoolishness": 60,
+            "maxFoolishness": 100,
+            "description": "Хорошая идея попробовать ковёр на вкус. Вы с наслаждением приступаете к важному делу, но Вас замечают. Сейчас Вы встретитесь с тапком...",
+            "chance": 0.5
         }
     }
 }
