@@ -79,7 +79,12 @@
             },
             "required": [
                 "foolishness",
-                "description"
+                "description",
+                "stupidity",
+                "chance",
+                "minFoolishness",
+                "maxFoolishness",
+                "title"
             ],
             "additionalProperties": false
         }
