@@ -80,11 +80,11 @@
             "required": [
                 "foolishness",
                 "description",
-                "title",
-                "maxFoolishness",
-                "minFoolishness",
+                "stupidity",
                 "chance",
-                "stupidity"
+                "minFoolishness",
+                "maxFoolishness",
+                "title"
             ],
             "additionalProperties": false
         }
