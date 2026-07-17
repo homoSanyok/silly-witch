@@ -1,5 +1,5 @@
 import { Application, extensions, ExtensionType } from "pixi.js";
-import { Action, Chat, CustomEventMap, Foolishness, KeysListener, loadBackground, Singletons, Yennefer } from "@app";
+import { Action, Chat, CustomEventMap, Boredom, KeysListener, loadBackground, Singletons, Yennefer } from "@app";
 import { loadHall } from "@widgets";
 
 declare global {
@@ -35,13 +35,13 @@ extensions.add({
   document.body.appendChild(app.canvas);
 
   window.KeysListener = new KeysListener();
-  window.Foolishness = new Foolishness();
+  window.Boredom = new Boredom();
   window.Yennefer = new Yennefer();
   window.Action = new Action();
   window.Chat = new Chat();
 
   await window.Yennefer.load();
-  await window.Foolishness.load();
+  await window.Boredom.load();
   await window.Action.load();
   await window.Chat.load();
 
@@ -51,6 +51,6 @@ extensions.add({
   app.stage.addChild(background);
   app.stage.addChild(hall);
   app.stage.addChild(window.Action.container);
-  app.stage.addChild(window.Foolishness.container);
+  app.stage.addChild(window.Boredom.container);
   app.stage.addChild(window.Chat.container);
 })();

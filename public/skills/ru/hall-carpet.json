@@ -1,0 +1,43 @@
+{
+    "$schema": "../skills.schema.json",
+    "lie-down": {
+        "id": "lie-down",
+        "title": "Прилечь на край ковра",
+        "description": "Собака с настороженностью ложится на край коврика",
+        "cost": 0,
+        "boredom": -10,
+        "freeze-boredom": true,
+        "stupidity": 1,
+        "children": [
+            {
+                "id": "lie-on-your-side",
+                "title": "Прилечь на бок",
+                "description": "Собака без задних мыслей ложится на бок",
+                "cost": 1,
+                "boredom": -15,
+                "freeze-boredom": true,
+                "stupidity": 5,
+                "children": [
+                    {
+                        "id": "lie-on-your-back",
+                        "title": "Прилечь на спину",
+                        "description": "Собаку вообще ничего не смущает, она ложится прямо на спину",
+                        "cost": 2,
+                        "boredom": -18,
+                        "freeze-boredom": true,
+                        "stupidity": 7
+                    }
+                ]
+            },
+            {
+                "id": "lie-by-the-door",
+                "title": "Прилечь прямо у двери",
+                "description": "Собака без задних мыслей ложится прямо у двери",
+                "cost": 1,
+                "boredom": -12,
+                "freeze-boredom": true,
+                "stupidity": 3
+            }
+        ]
+    }
+}

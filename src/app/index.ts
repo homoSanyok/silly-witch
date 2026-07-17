@@ -15,6 +15,6 @@ export * from "./config/size";
 export * from "./config/actions-results";
 
 export * from "./ui/yennefer";
-export * from "./ui/foolishness";
+export * from "./ui/boredom";
 export * from "./ui/action";
 export * from "./ui/chat";

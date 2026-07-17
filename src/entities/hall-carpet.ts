@@ -14,7 +14,7 @@ export class HallCarpet extends InteractiveLayer {
                         if (success instanceof Error) return;
 
                         const { result } = this.actionResults.selectResult(success);
-                        window.Foolishness.level = window.Foolishness.level + result.foolishness;
+                        window.Boredom.level = window.Boredom.level + result.foolishness;
                         window.Chat.start(result);
                     });
             }

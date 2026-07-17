@@ -13,7 +13,7 @@ export class ActionResults {
     selectResult(success: boolean) {
         const results = (success ? this.actionReults.success : this.actionReults.failed);
         const resKeys = Object.keys(results)
-            .filter(key => window.Foolishness.level >= results[key].minFoolishness && window.Foolishness.level <= results[key].maxFoolishness);
+            .filter(key => window.Boredom.level >= results[key].minFoolishness && window.Boredom.level <= results[key].maxFoolishness);
 
         const totalChance = resKeys.reduce((sum, key) => sum + results[key].chance, 0);
         let key: string = "";

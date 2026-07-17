@@ -1,0 +1,67 @@
+{
+    "$schema": "https://github.com/homoSanyok/silly-witch/public/skills",
+    "title": "Схема дерева навыков",
+    "type": "object",
+    "additionalProperties": {
+        "$ref": "#/definitions/SkillT"
+    },
+    "definitions": {
+        "SkillT": {
+            "type": "object",
+            "description": "Объект умения",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "Идентификатор умения",
+                    "minLength": "1"
+                },
+                "title": {
+                    "type": "string",
+                    "description": "Название умения",
+                    "minLength": 1
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Описание умения",
+                    "minLength": 1
+                },
+                "stupidity": {
+                    "type": "integer",
+                    "description": "Количество глупости, на которое изменится шакала глупости",
+                    "minimum": -100,
+                    "maximum": 100
+                },
+                "boredom": {
+                    "type": "integer",
+                    "description": "Количество глупости, на которое изменится шакала скуки",
+                    "minimum": -100,
+                    "maximum": 100
+                },
+                "freeze-boredom": {
+                    "type": "boolean"
+                },
+                "cost": {
+                    "type": "number",
+                    "description": "Цена открытия умения",
+                    "minimum": 0
+                },
+                "children": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/SkillT"
+                    }
+                }
+            },
+            "required": [
+                "id",
+                "title",
+                "description",
+                "stupidity",
+                "boredom",
+                "freeze-boredom",
+                "cost"
+            ],
+            "additionalProperties": false
+        }
+    }
+}

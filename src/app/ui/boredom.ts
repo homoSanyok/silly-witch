@@ -1,11 +1,11 @@
 import { Container, Graphics, Ticker } from "pixi.js";
 
-const FOOLISHNESS_PATH = "foolishness";
-const FOOLISHNESS_MIN = 0;
-const FOOLISHNESS_MAX = 100;
+const BOREDOM_PATH = "foolishness";
+const BOREDOM_MIN = 0;
+const BOREDOM_MAX = 100;
 
-const FOOLISHNESS_SPEED_PATH = "foolishness_speed";
-const FOOLISHNESS_SPEED_MIN = .1;
+const BOREDOM_SPEED_PATH = "foolishness_speed";
+const BOREDOM_SPEED_MIN = .1;
 
 const PADDING = 4;
 const WIDTH = 48 - PADDING * 2;
@@ -15,7 +15,7 @@ const FRAME_TIMER_TIMEOUT = 1000;
 /**
  * Singleton объект, инициализируемый в `window`.
  */
-export class Foolishness {
+export class Boredom {
     private readonly ticker = new Ticker();
 
     private _level: number;
@@ -30,8 +30,8 @@ export class Foolishness {
 
     set level(value: number) {
         let fixedValue = value;
-        if (value > FOOLISHNESS_MAX) fixedValue = FOOLISHNESS_MAX;
-        if (value < FOOLISHNESS_MIN) fixedValue = FOOLISHNESS_MIN;
+        if (value > BOREDOM_MAX) fixedValue = BOREDOM_MAX;
+        if (value < BOREDOM_MIN) fixedValue = BOREDOM_MIN;
 
         this.fillingRect.clear();
         const height = HEIGHT * (fixedValue / 100);
@@ -39,15 +39,15 @@ export class Foolishness {
             .fill("#A59805");
 
         this._level = fixedValue;
-        localStorage.setItem(FOOLISHNESS_PATH, fixedValue.toString());
+        localStorage.setItem(BOREDOM_PATH, fixedValue.toString());
     }
 
     set speed(value: number) {
         let fixedValue = value;
-        if (value < FOOLISHNESS_SPEED_MIN) fixedValue = FOOLISHNESS_SPEED_MIN;
+        if (value < BOREDOM_SPEED_MIN) fixedValue = BOREDOM_SPEED_MIN;
 
         this._level = fixedValue;
-        localStorage.setItem(FOOLISHNESS_SPEED_PATH, fixedValue.toString());
+        localStorage.setItem(BOREDOM_SPEED_PATH, fixedValue.toString());
     }
 
     async load() {
@@ -80,8 +80,8 @@ export class Foolishness {
     }
 
     constructor() {
-        this._level = Number(localStorage.getItem(FOOLISHNESS_PATH) ?? FOOLISHNESS_MIN);
-        this._speed = Number(localStorage.getItem(FOOLISHNESS_SPEED_PATH) ?? FOOLISHNESS_SPEED_MIN);
+        this._level = Number(localStorage.getItem(BOREDOM_PATH) ?? BOREDOM_MIN);
+        this._speed = Number(localStorage.getItem(BOREDOM_SPEED_PATH) ?? BOREDOM_SPEED_MIN);
 
         let frameTimer = 0;
         this.ticker.add(ticker => {
@@ -93,7 +93,5 @@ export class Foolishness {
             }
         });
         this.ticker.start();
-
-        // window.addEventListener("foolishness:changed", () => this.setLevel(this.level));
     }
 }
